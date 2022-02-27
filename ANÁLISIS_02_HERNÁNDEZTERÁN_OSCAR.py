@@ -1,8 +1,12 @@
-#!/usr/bin/env python
-# coding: utf-8
+'''
+Autor:
+      Oscar Hernández Terán
 
-# In[100]:
-
+Instrucciones del programa:
+      1. Rutas de importación y exportación.
+      2. Medio de transporte utilizado.
+      3. Valor total de importaciones y exportaciones.
+'''
 
 import pandas as pd
 import numpy as np
@@ -11,24 +15,10 @@ import seaborn as sns
 plt.style.use('bmh')
 
 
-# In[3]:
-
-
 df = pd.read_csv('synergy_logistics_database.csv')
-df.head(10)
-
-
-# 1. Rutas de importación y exportación
-# 2. Medio de trasnporte
-# 3. Valor de importación y exportación
-# 
-# - 10 rutas más demandadas
-# - 3 medios de trasnporte más importante
-# - Países con 80% del valor
-
-# ### Rutas
-
-# In[5]:
+print('--------------------------------------------------')
+print('----- Forma general de la Base de datos (BD) ----- \n\n')
+print(df.head(10))
 
 
 # Primero vamos a separar en dos DataFrames para contemplar tanto importaciones como exportaciones
@@ -36,16 +26,19 @@ df_imports = df[df['direction'] == 'Imports']
 df_exports = df[df['direction'] == 'Exports']
 
 
-# In[60]:
-
-
 # Creamos una columna auxiliar para contar la demanda
-df_imports['Total_Use'] = 1
-df_exports['Total_Use'] = 1
+def Ones(df_original):
+      df = df_original.copy()
+      df['Total_Use'] = 1
+      return df
+df_imports = Ones(df_imports)
+df_exports = Ones(df_exports)
 
 
-# In[9]:
 
+#--------------------------------------------------------
+# ---------------------PUNTO 1---------------------------
+#--------------------------------------------------------
 
 # Creación de rutas
 def Routes(df_original):
@@ -59,21 +52,16 @@ df_imports = Routes(df_imports)
 df_exports = Routes(df_exports)
 
 
-# In[10]:
+
+print('--------------------------------------------------')
+print('------- Creación de la columna de rutas ---------- \n\n')
+print(df_imports.head())
+print('\n\n')
+print(df_exports.head())
 
 
-df_imports.head()
 
-
-# In[11]:
-
-
-df_exports.head()
-
-
-# In[31]:
-
-
+# Creamos una función para generar un nuevo DF con nueva estructura
 def new_df(df_original):
     df = df_original.copy()
     df['Total_Use'] = 1
@@ -82,35 +70,17 @@ def new_df(df_original):
     df = df.sort_values('total_value', ascending=False)
     return df
 
-
-# In[32]:
-
-
 # Creamos un nuevo DF ordenado por ventas de cada ruta
 count_routes_imports = new_df(df_imports)
-
-
-# In[33]:
-
-
 count_routes_exports = new_df(df_exports)
 
 
-# In[34]:
-
-
 # 10 rutas más demandadas
-count_routes_imports.head(10)
-
-
-# In[35]:
-
-
-# 10 rutas más demandadas
-count_routes_exports.head(10)
-
-
-# In[66]:
+print('--------------------------------------------------')
+print('--------------- Top 10 rutas  -------------------- \n\n')
+print(count_routes_imports.head(10))
+print('\n\n')
+print(count_routes_exports.head(10))
 
 
 def values_routes(df_original):
@@ -120,22 +90,9 @@ def values_routes(df_original):
     rest  = (df['total_value'][10:].sum() / total) * 100 
     return total, top10, rest
 
-
-# In[38]:
-
-
 # Porcentaje de las 10 rutas con más ventas
 total_imports, top_10_imports, rest_imports = values_routes(count_routes_imports) 
-
-
-# In[39]:
-
-
-# Porcentaje de las 10 rutas con más ventas
 total_exports, top_10_exports, rest_exports = values_routes(count_routes_exports) 
-
-
-# In[48]:
 
 
 print('--------RUTAS MÁS DEMANDADAS POR DIRECCIÓN DE COMERCIO------')
@@ -151,8 +108,6 @@ print('     -------------------------------------------------\n',
 print('-----------------------------------------------------------')
 
 
-# In[120]:
-
 
 # 10 rutas más demandadas según dirección
 def Plot_Routes(df, direction):
@@ -162,25 +117,20 @@ def Plot_Routes(df, direction):
     ax.set_title('Top 10 rutas en {}'.format(direction), fontsize=22)
     ax.set_xlabel('Routes', fontsize=16)
     ax.set_ylabel('Total Value [$]', fontsize=16)
+    plt.show()
 
 
-# In[121]:
-
-
+# Llamado a la función
 Plot_Routes(count_routes_imports, 'Importación')
-
-
-# In[122]:
-
-
 Plot_Routes(count_routes_exports, 'Exportación')
 
 
-# ### Transporte
-
-# In[61]:
 
 
+
+#--------------------------------------------------------
+# ---------------------PUNTO 1---------------------------
+#--------------------------------------------------------
 def Transport(df_original):
     df = df_original.copy()
     df = df.groupby('transport_mode').sum()
