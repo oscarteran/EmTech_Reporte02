@@ -118,19 +118,20 @@ print('\n\n')
 
 
 # 10 rutas más demandadas según dirección. Gráfico.
-def Plot_Routes(df, direction):
-    plt.figure(figsize=(9,6))
+def Plot_Routes(df, direction, save=False):
+    #plt.figure(figsize=(9,6))
     ax = sns.barplot(x=df.index[:10], y=df['total_value'][:10], palette='bone')
     ax.set_xticklabels(ax.get_xticklabels(),rotation = 70)
     ax.set_title('Top 10 rutas en {}'.format(direction), fontsize=22)
     ax.set_xlabel('Routes', fontsize=16)
     ax.set_ylabel('Total Value [$]', fontsize=16)
+    if save == True:
+          plt.savefig('Routes'+direction+'.jpg', dpi=900)
     plt.show()
 
-
 # Llamado a la función
-Plot_Routes(count_routes_imports, 'Importación')
-Plot_Routes(count_routes_exports, 'Exportación')
+Plot_Routes(count_routes_imports, 'Importación', True)
+Plot_Routes(count_routes_exports, 'Exportación', True)
 
 
 
@@ -165,20 +166,22 @@ print('\n\n')
 
 
 # Gráfico para observar la contribución de cada medio de transporte
-def Plot_Transport(df, direccion):
+def Plot_Transport(df, direccion, save=False):
     plt.figure(figsize=(8,8))
     data = df['total_value']
     labels = df.index
     colors = sns.color_palette('deep')[0:4]
     plt.pie(data, labels=labels, colors=colors, autopct='%.0f%%')
     plt.title('Porcentaje del valor de las {} \n según transporte'.format(direccion), fontsize=18)
+    if save == True:
+        plt.savefig('Transport'+direccion+'.jpg', dpi=900)
     plt.show()
 
 
 
 # Llamado a la función
-Plot_Transport(count_transport_imports, 'Importaciones')
-Plot_Transport(count_transport_exports, 'Exportaciones')
+Plot_Transport(count_transport_imports, 'Importaciones', True)
+Plot_Transport(count_transport_exports, 'Exportaciones', True)
 
 
 
@@ -227,16 +230,17 @@ print('\n\n')
 
 
 # Función para generar gráfico de los países que en conjunto representan el 80%
-def Plot_80(df, direction, lim, por):
+def Plot_80(df, direction, lim, por, save=False):
     plt.figure(figsize=(9,6))
     ax = sns.barplot(x=df['Countries'][:lim], y=df['Total_value'][:lim], palette='inferno')
     ax.set_xticklabels(ax.get_xticklabels(),rotation = 60)
     ax.set_title('Países con el {:.2f}$ del valor en {}'.format(por, direction), fontsize=20)
     ax.set_xlabel('Países', fontsize=16)
     ax.set_ylabel('Total Value [$]', fontsize=16)
+    if save == True:
+        plt.savefig('80Contries'+direction+'.jpg', dpi=900)
     plt.show()
 
-
 # Llamado a las funciones
-Plot_80(values_import, 'Importación', 6, values_import['Percent'][5])
-Plot_80(values_export, 'Exportación', 13, values_export['Percent'][12])
+Plot_80(values_import, 'Importación', 6, values_import['Percent'][5], True)
+Plot_80(values_export, 'Exportación', 13, values_export['Percent'][12], True)
