@@ -19,6 +19,7 @@ df = pd.read_csv('synergy_logistics_database.csv')
 print('--------------------------------------------------')
 print('----- Forma general de la Base de datos (BD) ----- \n\n')
 print(df.head(10))
+print('\n\n')
 
 
 # Primero vamos a separar en dos DataFrames para contemplar tanto importaciones como exportaciones
@@ -55,9 +56,12 @@ df_exports = Routes(df_exports)
 
 print('--------------------------------------------------')
 print('------- Creación de la columna de rutas ---------- \n\n')
+print('IMPORTACIONES')
 print(df_imports.head())
 print('\n\n')
+print('EXPORTACIONES')
 print(df_exports.head())
+print('\n\n')
 
 
 
@@ -78,11 +82,15 @@ count_routes_exports = new_df(df_exports)
 # 10 rutas más demandadas
 print('--------------------------------------------------')
 print('--------------- Top 10 rutas  -------------------- \n\n')
+print('IMPORTACIONES')
 print(count_routes_imports.head(10))
 print('\n\n')
+print('EXPORTACIONES')
 print(count_routes_exports.head(10))
+print('\n\n')
 
 
+# Función para devolver valores porcentuales
 def values_routes(df_original):
     df = df_original.copy()
     total = df['total_value'].sum()
@@ -106,14 +114,14 @@ print('     -------------------------------------------------\n',
       '    Top 10:            %', top_10_exports, '\n',  
       '    Resto de rutas:    %', rest_exports)
 print('-----------------------------------------------------------')
+print('\n\n')
 
 
-
-# 10 rutas más demandadas según dirección
+# 10 rutas más demandadas según dirección. Gráfico.
 def Plot_Routes(df, direction):
-    plt.figure(figsize=(10,6))
+    plt.figure(figsize=(9,6))
     ax = sns.barplot(x=df.index[:10], y=df['total_value'][:10], palette='bone')
-    ax.set_xticklabels(ax.get_xticklabels(),rotation = 90)
+    ax.set_xticklabels(ax.get_xticklabels(),rotation = 70)
     ax.set_title('Top 10 rutas en {}'.format(direction), fontsize=22)
     ax.set_xlabel('Routes', fontsize=16)
     ax.set_ylabel('Total Value [$]', fontsize=16)
@@ -129,8 +137,10 @@ Plot_Routes(count_routes_exports, 'Exportación')
 
 
 #--------------------------------------------------------
-# ---------------------PUNTO 1---------------------------
+# ---------------------PUNTO 2---------------------------
 #--------------------------------------------------------
+
+# Creamos una función para observar los medios de transporte
 def Transport(df_original):
     df = df_original.copy()
     df = df.groupby('transport_mode').sum()
@@ -139,23 +149,22 @@ def Transport(df_original):
     return df
 
 
-# In[64]:
-
-
+# Llamado a la función
 count_transport_imports = Transport(df_imports)
-count_transport_imports
-
-
-# In[65]:
-
-
 count_transport_exports = Transport(df_exports)
-count_transport_exports
 
 
-# In[136]:
+print('--------------------------------------------------')
+print('---------------- Trasnportes --------------------- \n\n')
+print('IMPORTACIONES')
+print(count_transport_imports)
+print('\n\n')
+print('EXPORTACIONES')
+print(count_transport_exports)
+print('\n\n')
 
 
+# Gráfico para observar la contribución de cada medio de transporte
 def Plot_Transport(df, direccion):
     plt.figure(figsize=(8,8))
     data = df['total_value']
@@ -163,25 +172,23 @@ def Plot_Transport(df, direccion):
     colors = sns.color_palette('deep')[0:4]
     plt.pie(data, labels=labels, colors=colors, autopct='%.0f%%')
     plt.title('Porcentaje del valor de las {} \n según transporte'.format(direccion), fontsize=18)
+    plt.show()
 
 
-# In[137]:
 
-
+# Llamado a la función
 Plot_Transport(count_transport_imports, 'Importaciones')
-
-
-# In[139]:
-
-
 Plot_Transport(count_transport_exports, 'Exportaciones')
 
 
-# ### Valores totales
-
-# In[85]:
 
 
+
+#--------------------------------------------------------
+# ---------------------PUNTO 3---------------------------
+#--------------------------------------------------------
+
+# Función para asignar a cada país su total y porcentaje acumulado ordenado
 def Countries_80(df_original):
     df = df_original.copy()
     df = df.groupby(['destination']).sum()
@@ -203,43 +210,36 @@ def Countries_80(df_original):
     return df_new
 
 
-# In[143]:
-
-
+# Llamado a la función
 values_import = Countries_80(df_imports)
-values_import.head(10)
-
-
-# In[166]:
-
-
 values_export = Countries_80(df_exports)
-values_export
 
 
-# In[170]:
+
+print('--------------------------------------------------')
+print('------- Paises con aportación del 80% ------------ \n\n')
+print('IMPORTACIONES')
+print(values_import)
+print('\n\n')
+print('EXPORTACIONES')
+print(values_export)
+print('\n\n')
 
 
+# Función para generar gráfico de los países que en conjunto representan el 80%
 def Plot_80(df, direction, lim, por):
-    plt.figure(figsize=(10,6))
+    plt.figure(figsize=(9,6))
     ax = sns.barplot(x=df['Countries'][:lim], y=df['Total_value'][:lim], palette='inferno')
     ax.set_xticklabels(ax.get_xticklabels(),rotation = 60)
     ax.set_title('Países con el {:.2f}$ del valor en {}'.format(por, direction), fontsize=20)
     ax.set_xlabel('Países', fontsize=16)
     ax.set_ylabel('Total Value [$]', fontsize=16)
+    plt.show()
 
 
-# In[171]:
-
-
+# Llamado a las funciones
 Plot_80(values_import, 'Importación', 6, values_import['Percent'][5])
-
-
-# In[172]:
-
-
 Plot_80(values_export, 'Exportación', 13, values_export['Percent'][12])
 
 
-# In[ ]:
 
