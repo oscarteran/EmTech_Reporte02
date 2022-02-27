@@ -240,6 +240,3 @@ def Plot_80(df, direction, lim, por):
 # Llamado a las funciones
 Plot_80(values_import, 'Importación', 6, values_import['Percent'][5])
 Plot_80(values_export, 'Exportación', 13, values_export['Percent'][12])
-
-
-
