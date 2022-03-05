@@ -156,7 +156,7 @@ count_transport_exports = Transport(df_exports)
 
 
 print('--------------------------------------------------')
-print('---------------- Trasnportes --------------------- \n\n')
+print('---------------- Transportes --------------------- \n\n')
 print('IMPORTACIONES')
 print(count_transport_imports)
 print('\n\n')
